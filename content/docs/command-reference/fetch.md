@@ -1,13 +1,13 @@
 # fetch
 
-Get files or directories tracked by DVC from
+Get tracked files or directories from
 [remote storage](/doc/command-reference/remote) into the <abbr>cache</abbr>.
 
 ## Synopsis
 
 ```usage
 usage: dvc fetch [-h] [-q | -v] [-j JOBS]
-                 [-r REMOTE] [-a] [-T] [-d] [-R]
+                 [-r <name>] [-a] [-T] [-d] [-R]
                  [targets [targets ...]]
 
 positional arguments:
@@ -17,12 +17,11 @@ positional arguments:
 
 ## Description
 
-The `dvc fetch` command is a means to download files from remote storage into
-the cache of the project, but without placing them in the
-<abbr>workspace</abbr>. This makes the data files available for linking (or
-copying) into the workspace. (Refer to
-[dvc config cache.type](/doc/command-reference/config#cache).) Along with
-`dvc checkout`, it's performed automatically by `dvc pull` when the target
+The `dvc fetch` downloads DVC-tracked files from remote storage into the cache
+of the project, but without placing them in the <abbr>workspace</abbr>. This
+makes the data files available for linking (or copying) into the workspace.
+(Refer to [dvc config cache.type](/doc/command-reference/config#cache).) Along
+with `dvc checkout`, it's performed automatically by `dvc pull` when the target
 [DVC-files](/doc/user-guide/dvc-file-format) are not already in the cache:
 
 ```
@@ -44,10 +43,10 @@ project's cache                  ++ | dvc pull |
 
 Fetching could be useful when first checking out a <abbr>DVC project</abbr>,
 since files tracked by DVC should already exist in remote storage, but won't be
-in the project's cache. (Refer to `dvc remote` for more information on DVC
-remotes.) These necessary data or model files are listed as dependencies or
-outputs in a DVC-file (target [stage](/doc/command-reference/run)) so they are
-required to [reproduce](/doc/get-started/reproduce) the corresponding
+in the project's <abbr>cache</abbr>. (Refer to `dvc remote` for more information
+on DVC remotes.) These necessary data or model files are listed as dependencies
+or outputs in a DVC-file (target [stage](/doc/command-reference/run)) so they
+are required to [reproduce](/doc/get-started/reproduce) the corresponding
 [pipeline](/doc/command-reference/pipeline). (See
 [DVC-File Format](/doc/user-guide/dvc-file-format) for more information on
 dependencies and outputs.)
@@ -58,8 +57,8 @@ specified, the set of data files to fetch is determined by analyzing all
 DVC-files in the current branch, unless `--all-branches` or `--all-tags` is
 specified.
 
-The default remote is used unless `--remote` is specified. See `dvc remote add`
-for more information on how to configure different remote storage providers.
+The default remote is used (see `dvc config core.remote`) unless the `--remote`
+option is used.
 
 `dvc fetch`, `dvc pull`, and `dvc push` are related in that these 3 commands
 perform data synchronization among local and remote storage. The specific way in
@@ -71,27 +70,25 @@ by `dvc fetch` (unless the `-a` or `-T` options are used).
 
 ## Options
 
-- `-r REMOTE`, `--remote REMOTE` - name of the
+- `-r <name>`, `--remote <name>` - name of the
   [remote storage](/doc/command-reference/remote) to fetch from (see
-  `dvc remote list`). If not specified, the default remote is used (see
-  `dvc config core.remote`). The argument `REMOTE` is a remote name defined
-  using the `dvc remote` command.
+  `dvc remote list`).
 
-- `-d`, `--with-deps` - one or more `targets` should be specified for this
-  option to have effect. Determines files to download by tracking dependencies
-  to the target DVC-files (stages). By traversing all stage dependencies, DVC
-  searches backward from the target stages in the corresponding pipelines. This
-  means DVC will not fetch files referenced in later stages than the `targets`.
+- `-d`, `--with-deps` - determines files to download by tracking dependencies to
+  the target DVC-files (stages). If no `targets` are provided, this option is
+  ignored. By traversing all stage dependencies, DVC searches backward from the
+  target stages in the corresponding pipelines. This means DVC will not fetch
+  files referenced in later stages than the `targets`.
 
 - `-R`, `--recursive` - determines the files to fetch by searching each target
-  directory and its subdirectories for DVC-files to inspect. `targets` is
-  expected to contain one or more directories for this option to have effect.
+  directory and its subdirectories for DVC-files to inspect. If there are no
+  directories among the `targets`, this option is ignored.
 
-- `-j JOBS`, `--jobs JOBS` - number of threads to run simultaneously to handle
-  the downloading of files from the remote. Using more jobs may improve the
-  total download speed if a combination of small and large files are being
-  fetched. The default value is `4 * cpu_count()`. For SSH remotes default is
-  just 4.
+- `-j <number>`, `--jobs <number>` - number of threads to run simultaneously to
+  handle the downloading of files from the remote. The default value is
+  `4 * cpu_count()`. For SSH remotes, the default is just `4`. Using more jobs
+  may improve the total download speed if a combination of small and large files
+  are being fetched.
 
 - `-a`, `--all-branches` - fetch cache for all Git branches instead of just the
   current workspace. This means DVC may download files needed to reproduce

@@ -214,16 +214,16 @@
         }
       },
       {
+        "label": "gc",
+        "slug": "gc"
+      },
+      {
         "label": "get-url",
         "slug": "get-url"
       },
       {
         "label": "get",
         "slug": "get"
-      },
-      {
-        "label": "gc",
-        "slug": "gc"
       },
       {
         "label": "import-url",
@@ -361,6 +361,25 @@
       {
         "label": "version",
         "slug": "version"
+      }
+    ]
+  },
+  {
+    "slug": "api-reference",
+    "label": "Python API Reference",
+    "source": "api-reference/index.md",
+    "children": [
+      {
+        "slug": "get_url",
+        "label": "get_url()"
+      },
+      {
+        "slug": "open",
+        "label": "open()"
+      },
+      {
+        "slug": "read",
+        "label": "read()"
       }
     ]
   },

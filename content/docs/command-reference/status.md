@@ -8,8 +8,8 @@ and remote storage.
 ## Synopsis
 
 ```usage
-usage: dvc status [-h] [-v] [-j JOBS] [-q] [-c]
-                  [-r REMOTE] [-a] [-T] [-d] [targets [targets ...]]
+usage: dvc status [-h] [-v] [-j <number>] [-q] [-c]
+                  [-r <name>] [-a] [-T] [-d] [targets [targets ...]]
 
 positional arguments:
   targets        Limit command scope to these DVC-files. Using -R,
@@ -19,11 +19,12 @@ positional arguments:
 ## Description
 
 `dvc status` searches for changes in the existing pipelines, either showing
-which [stages](/doc/command-reference/run) have changed in the workspace
-(including uncommitted local changes) and must be reproduced (with `dvc repro`),
-or differences between <abbr>cache</abbr> vs. remote storage (meaning `dvc push`
-or `dvc pull` should be run to synchronize them). The two modes, _local_ and
-_cloud_ are triggered by using the `--cloud` or `--remote` options:
+which [stages](/doc/command-reference/run) have changed in the workspace (not
+yet tracked by DVC) and must be added again (with `dvc add`) or reproduced (with
+`dvc repro`); or differences between <abbr>cache</abbr> vs. remote storage
+(meaning `dvc push` or `dvc pull` should be run to synchronize them). The two
+modes, _local_ and _cloud_ are triggered by using the `--cloud` or `--remote`
+options:
 
 | Mode   | CLI Option | Description                                                                                                                 |
 | ------ | ---------- | --------------------------------------------------------------------------------------------------------------------------- |
@@ -96,21 +97,9 @@ workspace) is different from remote storage. Bringing the two into sync requires
 
 ## Options
 
-- `-d`, `--with-deps` - one or more `targets` should be specified for this
-  option to have effect. Determines files to check by tracking dependencies to
-  the target DVC-files (stages). By traversing all stage dependencies, DVC
-  searches backward from the target stages in the corresponding pipelines. This
-  means DVC will not show changes occurring in later stages than the `targets`.
-  Applies whether or not `--cloud` is specified.
-
 - `-c`, `--cloud` - enables comparison against a remote. (See `dvc remote`.). If
-  no `--remote` option has been given, DVC will compare against the default
-  remote (specified in the `core.remote` config option). Otherwise the
-  comparison will be against the remote specified in the `--remote` option.
-
-- `-r REMOTE`, `--remote REMOTE` - specifies which remote storage (see
-  `dvc remote list`) to compare against. The argument, `REMOTE`, is a remote
-  name defined using the `dvc remote` command. Implies `--cloud`.
+  no `--remote` option is provided, DVC will compare against the default remote
+  (specified in the `core.remote` config option).
 
 - `-a`, `--all-branches` - compares cache content against all Git branches
   instead of just the current workspace. This basically runs the same status
@@ -121,7 +110,17 @@ workspace) is different from remote storage. Bringing the two into sync requires
   checking just the current workspace. Similar to `-a` above. Note that both
   options can be combined, for example using the `-aT` flag.
 
-- `-j JOBS`, `--jobs JOBS` - specifies the number of jobs DVC can use to
+- `-d`, `--with-deps` - determines files to check by tracking dependencies to
+  the target DVC-files (stages). If no `targets` are provided, this option is
+  ignored. By traversing all stage dependencies, DVC searches backward from the
+  target stages in the corresponding pipelines. This means DVC will not show
+  changes occurring in later stages than the `targets`. Applies whether or not
+  `--cloud` is specified.
+
+- `-r <name>`, `--remote <name>` - specifies which remote storage (see
+  `dvc remote list`) to compare against. Implies `--cloud`.
+
+- `-j <number>`, `--jobs <number>` - specifies the number of jobs DVC can use to
   retrieve information from remote servers. This only applies when the `--cloud`
   option is used or a remote is given.
 

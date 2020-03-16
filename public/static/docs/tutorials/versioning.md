@@ -257,6 +257,7 @@ straightforward:
 ```dvc
 $ git checkout v1.0
 $ dvc checkout
+# TODO @skshetry: show output here?
 ```
 
 These commands will restore the workspace to the first snapshot we made: code,
@@ -270,6 +271,7 @@ previous dataset version, we can do something like this:
 ```dvc
 $ git checkout v1.0 data.dvc
 $ dvc checkout data.dvc
+# TODO @skshetry: show output here?
 ```
 
 If you run `git status` you'll see that `data.dvc` is modified and currently

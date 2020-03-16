@@ -195,6 +195,7 @@ Let's now link files from the cache to the workspace with:
 
 ```dvc
 $ dvc checkout
+# TODO @skshetry: show output format here?
 ```
 
 ## Example: Specific stages

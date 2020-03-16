@@ -14,6 +14,7 @@ Let's say we want to get the previous `model.pkl` file. The short answer is:
 ```dvc
 $ git checkout baseline-experiment train.dvc
 $ dvc checkout train.dvc
+# TODO @skshetry: Show output here?
 ```
 
 These two commands will bring the previous model file to its place in the
@@ -47,6 +48,7 @@ To fully restore the previous experiment we just run `git checkout` and
 ```dvc
 $ git checkout baseline-experiment
 $ dvc checkout
+# TODO: show output here
 ```
 
 Read the `dvc checkout` command reference and a dedicated data versioning

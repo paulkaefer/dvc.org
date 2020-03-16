@@ -6,7 +6,7 @@ Get tracked files or directories from
 ## Synopsis
 
 ```usage
-usage: dvc fetch [-h] [-q | -v] [-j JOBS]
+usage: dvc fetch [-h] [-q | -v] [-j <number>]
                  [-r <name>] [-a] [-T] [-d] [-R]
                  [targets [targets ...]]
 
@@ -243,7 +243,7 @@ $ dvc status -c
 
 One could do a simple `dvc fetch` to get all the data, but what if you only want
 to retrieve the data up to our third stage, `train.dvc`? We can use the
-`--with-deps` (or `-d`) flag:
+`--with-deps` (or `-d`) option:
 
 ```dvc
 $ dvc fetch --with-deps train.dvc

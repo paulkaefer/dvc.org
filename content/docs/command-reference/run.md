@@ -8,7 +8,7 @@ command and execute the command.
 ```usage
 usage: dvc run [-h] [-q | -v] [-d <path>] [-o <path>] [-O <path>]
                [-m <path>] [-M <path>] [-f <filename>] [-c <path>]
-               [-w WDIR] [--no-exec] [-y] [--overwrite-dvcfile]
+               [-w <path>] [--no-exec] [-y] [--overwrite-dvcfile]
                [--ignore-build-cache] [--remove-outs] [--no-commit]
                [--always-changed]
                command
@@ -26,8 +26,8 @@ options) DVC can later connect each stage by building a dependency graph
 ([DAG](https://en.wikipedia.org/wiki/Directed_acyclic_graph)). This graph is
 used by DVC to restore a full data [pipeline](/doc/command-reference/pipeline).
 
-The remaining terminal input provided to `dvc run` after the options (`-`/`--`
-arguments) will become the required `command` argument. Please wrap the
+The remaining terminal input provided to `dvc run` after the command options
+(`-`/`--` flags) will become the required `command` argument. Please wrap the
 `command` with `"` quotes if there are special characters in it like `|` (pipe)
 or `<`, `>` (redirection) that would otherwise apply to `dvc run` itself e.g.
 `dvc run -d script.sh "./script.sh > /dev/null 2>&1"`. Use single quotes `'`
@@ -45,7 +45,7 @@ current working directory and named `<file>.dvc`, where `<file>` is file name of
 the first output (`-o`, `-O`, `-m`, or `-M` option). If neither `-f` nor outputs
 are specified, the file name defaults to `Dvcfile`.
 
-Note that `dvc run` executes the given `command` in order to check it's validity
+Note that `dvc run` executes the given `command` in order to check its validity
 and to write the defined outputs, unless the same `dvc run` command has already
 been run in this workspace (meaning an identical stage file already exists, and
 its outputs correspond to the stored file hash values).
@@ -128,12 +128,12 @@ data pipeline (e.g. random numbers, time functions, hardware dependency, etc.)
 - `-c <path>`, `--cwd <path>` (_deprecated_) - Use `-f` and `-w` to change the
   name and location (working directory) of a stage file.
 
-- `-w`, `--wdir` - specifies a working directory for the `command` to run in.
-  `dvc run` expects that dependencies, outputs, metric files are specified
-  relative to this directory. This value is saved in the `wdir` field of the
-  stage file generated (as a relative path to the location of the DVC-file) and
-  is used by `dvc repro` to change the working directory before executing the
-  `command`.
+- `-w <path>`, `--wdir <path>` - specifies a working directory for the `command`
+  to run in. `dvc run` expects that dependencies, outputs, metric files are
+  specified relative to this directory. This value is saved in the `wdir` field
+  of the stage file generated (as a relative path to the location of the
+  DVC-file) and is used by `dvc repro` to change the working directory before
+  executing the `command`.
 
 - `--no-exec` - create a stage file, but do not execute the `command` defined in
   it, nor track dependencies or outputs with DVC. In the DVC-file contents, the
@@ -178,8 +178,9 @@ data pipeline (e.g. random numbers, time functions, hardware dependency, etc.)
 
 ## Examples
 
-A trivial example to play with, try different set of options to see how they
-work. You don't need any actual data or scripts to play with this example:
+A first example to play with is to try the different command options, to see
+what they do. No pre-existing data or source code is needed, as we can use
+placeholders and in-line commands directly in `dvc run`:
 
 ```dvc
 $ mkdir example && cd example
@@ -187,14 +188,13 @@ $ git init
 $ dvc init
 $ mkdir data
 $ dvc run -d data -o metric -f metric.dvc "echo '1' >> metric"
-
 Running command:
-  echo '1' >> metric
-Saving information to 'metric.dvc'.
+	echo '1' >> metric
+WARNING: 'data' is empty.
 
-To track the changes with git run:
+To track the changes with git, run:
 
-  git add .gitignore metric.dvc
+	git add .gitignore metric.dvc
 ```
 
 > See [DVC-File Format](/doc/user-guide/dvc-file-format) for more details on the
